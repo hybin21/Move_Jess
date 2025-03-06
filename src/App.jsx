@@ -113,8 +113,7 @@ const App = () => {
                                 <header>
                                     <img src="movies.png" alt="film image" />
                                     <h1>
-                                        Find <span className="text-gradient">Movies</span> You'll Enjoy
-                                        Without the Hassle
+                                        Search Every <span className="text-gradient">Movie</span>, I will have <span className="text-gradient">everything</span>
                                     </h1>
                                     <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                                 </header>
