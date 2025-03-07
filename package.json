@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://hybin21.github.io/Move_Jess",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
