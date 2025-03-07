@@ -17,7 +17,8 @@
 
   --breakpoint-xs: 480px;
 
-  --background-image-hero-pattern: url("./hero-bg.png");
+  /* Removed hero-bg.png */
+  /* --background-image-hero-pattern: url("/hero-bg.png"); */
 }
 
 @layer base {
@@ -49,8 +50,10 @@
 }
 
 @layer components {
+  /* Updated .pattern class with a gradient instead of an image */
   .pattern {
-    @apply bg-hero-pattern w-screen h-screen bg-center bg-cover absolute z-0;
+    @apply w-screen h-screen absolute z-0;
+    background: linear-gradient(135deg, #1a1a2e, #16213e); /* Gradient Background */
   }
 
   .wrapper {
@@ -58,7 +61,7 @@
   }
 
   .trending {
-    @apply mt-20;
+    @apply mt-40;
 
     & ul {
       @apply flex flex-row overflow-y-auto gap-5 -mt-10 w-full hide-scrollbar;

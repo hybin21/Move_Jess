@@ -44,6 +44,7 @@ const App = () => {
             console.error(e);
         }
     };
+
     useEffect(() => {
         fetchGenres();
     }, []);
@@ -102,7 +103,7 @@ const App = () => {
     }, []);
 
     return (
-        <Router>
+        <Router basename="/Move_Jess">
             <Routes>
                 {/* Home Page */}
                 <Route
@@ -120,7 +121,7 @@ const App = () => {
                                 </header>
 
                                 {/* Use Components Instead of Inline Code */}
-                                <TrendingMovies trendingMovies={trendingMovies} />
+                                <TrendingMovies  trendingMovies={trendingMovies} />
                                 <ViewAllMovies
                                     isLoading={isLoading}
                                     errorMessage={errorMessage}
