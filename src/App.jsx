@@ -6,6 +6,7 @@ import ViewAllMovies from "./components/ViewAllMovies.jsx";
 import MovieDetails from "./components/MovieDetail.jsx";
 import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "./appwrite.js";
+import MovieTrailer from "./components/MovieTrailer.jsx";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;

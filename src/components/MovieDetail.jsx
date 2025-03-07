@@ -1,5 +1,6 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import MovieTrailer from "./MovieTrailer.jsx";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -17,7 +18,7 @@ const MovieDetails = ({ genreMap }) => {
     const navigate = useNavigate();
     const [keyWords, setKeyWords] = useState([]);
     const [movie, setMovie] = useState(location.state?.movie || null);
-
+    const [providers, setProviders] = useState([])
     useEffect(() => {
         const fetchMovieDetails = async () => {
             if (movie) return;
@@ -34,7 +35,7 @@ const MovieDetails = ({ genreMap }) => {
             }
         };
         fetchMovieDetails();
-    }, [id]);
+    }, [id, movie]);
 
     useEffect(() => {
         const fetchKeyWords = async () => {
@@ -53,16 +54,34 @@ const MovieDetails = ({ genreMap }) => {
         };
         fetchKeyWords();
     }, [id]);
+        useEffect(() => {
+            const fetchWatchProviders = async () => {
+                try {
+                    const response = await fetch(
+                        `${API_BASE_URL}/movie/${id}/watch/providers`,
+                        API_OPTIONS
+                    );
+                    if (!response.ok) throw new Error("Failed to fetch watch providers");
+                    const data = await response.json();
+                    console.log("Providers API Response:", data); // 🔍 Debugging
+
+                    const usProviders = data.results?.US?.flatrate || data.results?.US?.buy || [];
+                    setProviders(usProviders);
+                } catch (e) {
+                    console.error(e);
+                }
+            };
+            fetchWatchProviders();
+    }, [id]);
 
     if (!movie) {
         return (
             <p className="text-center text-red-500">Error: No movie details available.</p>
         );
     }
-
+    console.log(movie)
     return (
         <div className="relative min-h-screen flex items-center justify-center text-white">
-            {/* Apply the same background pattern as the main page */}
             <div className="pattern absolute inset-0"></div>
 
             <div className="wrapper relative bg-dark-100 p-8 rounded-lg max-w-4xl shadow-lg">
@@ -78,7 +97,7 @@ const MovieDetails = ({ genreMap }) => {
                     ⭐ {movie.vote_average?.toFixed(1)} / 10
                 </div>
 
-                <div className="flex gap-6 mt-4">
+                <div className="flex gap-6 mt-4 items-start">
                     <img
                         src={
                             movie.poster_path
@@ -86,12 +105,13 @@ const MovieDetails = ({ genreMap }) => {
                                 : "/no-movie.png"
                         }
                         alt={movie.title}
-                        className="w-60 rounded-lg shadow-lg"
+                        className="w-auto max-w-[300px] h-[250ps] object-cover "
                     />
                     <div className="w-full">
-                        <img src={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500${movie.backdrop_path}` : '/no-movie.png'} alt ={movie.title}/>
+                        <MovieTrailer  movieId={movie.id}/>
+                        {/*<img src={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500${movie.backdrop_path}` : '/no-movie.png'} alt ={movie.title}/>*/}
 
-                        <div className="flex gap-2 mt-2">
+                        <div className="flex gap-2 mt-5">
                             <p>
                                 <strong>Genre : </strong>
                             </p>
@@ -130,7 +150,28 @@ const MovieDetails = ({ genreMap }) => {
                         ) : (
                             <p className="text-gray-400 mt-4">No Keywords available</p>
                         )}
+                        {providers.length > 0 ? (
+                            <div className="mt-4">
+                                <p className="font-semibold mb-2">Available on:</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {providers.map((provider) => (
+                                        <a
+                                            key={provider.provider_id}
+                                            href={`https://www.themoviedb.org/movie/${id}/watch`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1 bg-gray-700 rounded-full text-sm text-white whitespace-nowrap hover:bg-blue-500 transition"
+                                        >
+                                            {provider.provider_name}
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="text-gray-400 mt-4">Only at Movie Theater</p>
+                        )}
                     </div>
+
                 </div>
 
                 <div className="mt-6">
@@ -148,6 +189,7 @@ const MovieDetails = ({ genreMap }) => {
                         <p>👍 : {movie.vote_count}</p>
                     </div>
                 </div>
+                {/*<MovieTrailer title = {movie.title}/>*/}
             </div>
         </div>
     );

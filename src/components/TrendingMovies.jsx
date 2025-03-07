@@ -1,6 +1,6 @@
 import React from "react";
 import {useNavigate} from 'react-router-dom';
-import {useRaf} from "react-use";
+// import {useRaf} from "react-use";
 
 const TrendingMovies = ({ trendingMovies }) => {
     const navigate = useNavigate();
