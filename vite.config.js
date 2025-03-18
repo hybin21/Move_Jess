@@ -6,4 +6,9 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: '/Move_Jess/',
+  server: {
+    proxy: {
+      '/api': 'http://localhost:5001',  // ✅ Proxy API calls to backend
+    },
+  },
 })

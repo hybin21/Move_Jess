@@ -19,6 +19,9 @@ const MovieDetails = ({ genreMap }) => {
     const [keyWords, setKeyWords] = useState([]);
     const [movie, setMovie] = useState(location.state?.movie || null);
     const [providers, setProviders] = useState([])
+    const [loading, setLoading] = useState(false);
+    const [summary, setSummary] = useState(""); // this will store returned value from exa.ai for movie's summarization
+
     useEffect(() => {
         const fetchMovieDetails = async () => {
             if (movie) return;
@@ -73,6 +76,33 @@ const MovieDetails = ({ genreMap }) => {
             };
             fetchWatchProviders();
     }, [id]);
+
+
+    // fetch movie summary from exa.ai
+    const fetchMovieSummary = async () => {
+        if(!movie || !movie.title) return;
+        setLoading(true);
+        setSummary("");
+        try {
+            const response = await fetch("http://localhost:5001/api/movie-summary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ movieTitle: movie.title }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.summary) {
+                setSummary(data.summary);
+            } else {
+                console.error("Error fetching movie summary");
+            }
+        } catch (error) {
+            console.error("Error fetching summary:", error);
+        }
+
+        setLoading(false);
+    };
 
     if (!movie) {
         return (
@@ -189,7 +219,17 @@ const MovieDetails = ({ genreMap }) => {
                         <p>👍 : {movie.vote_count}</p>
                     </div>
                 </div>
-                {/*<MovieTrailer title = {movie.title}/>*/}
+                <button className = "mt-2 px-2 py-1 bg-gray-700 rounded-2xl cursor-pointer hover hover:bg-white hover:text-black"
+                        onClick={fetchMovieSummary}
+                        disabled={loading}>
+                    {loading ? "Fetching..." : "Get Summarization from Exa.ai"}
+                </button>
+                {summary && (
+                    <p className="mt-4 p-4 bg-gray-800 text-white rounded-lg">
+                        <strong>Summary:</strong> {summary}
+                    </p>
+                )}
+
             </div>
         </div>
     );
