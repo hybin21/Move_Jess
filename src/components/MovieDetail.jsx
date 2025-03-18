@@ -80,22 +80,24 @@ const MovieDetails = ({ genreMap }) => {
 
     // fetch movie summary from exa.ai
     const fetchMovieSummary = async () => {
-        if(!movie || !movie.title) return;
+        if (!movie || !movie.title) return;
         setLoading(true);
         setSummary("");
+
         try {
-            const response = await fetch("http://3.15.226.141:5001/api/movie-summary", {
+            const response = await fetch("http://3.15.226.141:5002/api/movie-summary", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ movieTitle: movie.title }),
             });
 
             const data = await response.json();
+            console.log(data); // Debugging
 
             if (response.ok && data.summary) {
                 setSummary(data.summary);
             } else {
-                console.error("Error fetching movie summary");
+                console.error("Error fetching movie summary:", data);
             }
         } catch (error) {
             console.error("Error fetching summary:", error);
@@ -103,6 +105,7 @@ const MovieDetails = ({ genreMap }) => {
 
         setLoading(false);
     };
+
 
     if (!movie) {
         return (
