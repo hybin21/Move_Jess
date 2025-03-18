@@ -84,7 +84,7 @@ const MovieDetails = ({ genreMap }) => {
         setLoading(true);
         setSummary("");
         try {
-            const response = await fetch("http://localhost:5001/api/movie-summary", {
+            const response = await fetch("http://3.15.226.141:5001/api/movie-summary", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ movieTitle: movie.title }),
